@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
-    console.log(`01-basic-cicd app listening on port ${PORT}`);
+    console.log(`01-basic-cicd app listening on port :  ${PORT}`);
   });
 }
 

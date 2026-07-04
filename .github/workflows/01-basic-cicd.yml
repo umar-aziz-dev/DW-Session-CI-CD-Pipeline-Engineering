@@ -1,6 +1,5 @@
 # =============================================================================
 # DEMO 1: The simplest possible CI pipeline.
-# Show this one right after explaining triggers / jobs / steps / runners.
 # =============================================================================
 
 name: 01 - Basic CI Pipeline
