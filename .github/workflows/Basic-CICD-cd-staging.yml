@@ -1,0 +1,27 @@
+name: Staging CD Pipeline
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy-to-render:
+    runs-on: ubuntu-latest
+    # Step 2 – Declare the target GitHub Environment to inject secrets
+    environment: staging
+
+    steps:
+      # Step 1 – Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 3 – Send an HTTP POST request to the Render Staging Deploy Hook URL
+      - name: Trigger Render Staging Deployment
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_STAGING_URL }}"
+
+      # Step 4 – Output a timestamped deployment confirmation message
+      - name: Confirm Deployment
+        run: |
+          echo "Deployment to staging environment triggered at $(date)"

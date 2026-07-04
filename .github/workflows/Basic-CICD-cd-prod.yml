@@ -1,0 +1,22 @@
+name: Production CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-to-render:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Trigger Render Production Deployment
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_PROD_URL }}"
+
+      - name: Confirm Deployment
+        run: echo "Deployment to production environment completed at $(date)"
