@@ -10,6 +10,7 @@ describe('POST /login', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ success: true, message: 'Welcome, demo!' });
   });
+  
 
   test('returns 401 for invalid credentials', async () => {
     const res = await request(app).post('/login').send({ username: 'demo', password: '1' });
