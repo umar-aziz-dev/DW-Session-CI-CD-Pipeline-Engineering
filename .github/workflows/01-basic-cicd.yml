@@ -1,0 +1,61 @@
+# =============================================================================
+# DEMO 1: The simplest possible CI pipeline.
+# Show this one right after explaining triggers / jobs / steps / runners.
+# =============================================================================
+
+name: 01 - Basic CI Pipeline
+
+# "on" defines WHEN this workflow runs.
+# Here it runs on every push to main, and on every pull request (against any branch).
+on:
+  push:
+    branches: [main]
+    paths:
+      - '01-basic-cicd/**'
+      - '.github/workflows/01-basic-cicd.yml'
+  pull_request:
+    paths:
+      - '01-basic-cicd/**'
+      - '.github/workflows/01-basic-cicd.yml'
+
+# "jobs" is a set of tasks that run for this workflow. This demo has only ONE job,
+# on purpose, to keep the first pipeline as easy to follow as possible.
+jobs:
+  build-and-test:
+    # "runs-on" picks the machine (the "runner") GitHub spins up to execute the job.
+    # ubuntu-latest is a free, disposable Linux virtual machine.
+    runs-on: ubuntu-latest
+
+    # All the "run" steps below execute inside this folder, since the app
+    # lives in a subfolder of the repo rather than at the repo root.
+    defaults:
+      run:
+        working-directory: 01-basic-cicd
+
+    # "steps" are the individual commands that run in order, top to bottom.
+    # If any step fails, the job stops and is marked as failed.
+    steps:
+      # Step 1: Get a copy of the repository's code onto the runner.
+      # Without this, the runner is an empty machine with no code on it.
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Node.js on the runner so we can run our JavaScript app.
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 3: Install the app's dependencies (everything listed in package.json).
+      - name: Install Dependencies
+        run: npm install
+
+      # Step 4: Run the automated tests. If a test fails, this step fails,
+      # and the whole job is marked red - this is CI "catching problems early".
+      - name: Run Tests
+        run: npm test
+
+      # Step 5: "Build" the app. In this tiny demo it's just an echo command,
+      # but in a real project this is where you'd compile/bundle/transpile.
+      - name: Build App
+        run: npm run build

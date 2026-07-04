@@ -1,0 +1,104 @@
+# =============================================================================
+# DEMO 3: The testing pyramid as three sequential, gated CI jobs.
+# Show this during the "Testing Stages" section.
+# If unit-tests fails, integration-tests and e2e-tests never run.
+# =============================================================================
+
+name: 03 - Testing Pyramid
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '03-testing-pyramid/**'
+      - '.github/workflows/03-testing-pyramid.yml'
+  pull_request:
+    paths:
+      - '03-testing-pyramid/**'
+      - '.github/workflows/03-testing-pyramid.yml'
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # LAYER 1: Unit tests - the base of the pyramid.
+  # Tests one small piece of logic (a plain function) in complete isolation.
+  # Fastest layer, and the one you should have the MOST of in a real project.
+  # ---------------------------------------------------------------------------
+  unit-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 03-testing-pyramid
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Unit Tests
+        run: npm run test:unit
+
+  # ---------------------------------------------------------------------------
+  # LAYER 2: Integration tests - the middle of the pyramid.
+  # "needs: unit-tests" means this job is SKIPPED entirely if unit tests fail.
+  # Tests how our pieces work together (Express routing + our function),
+  # through a real HTTP-shaped request, but still no browser.
+  # ---------------------------------------------------------------------------
+  integration-tests:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 03-testing-pyramid
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Integration Tests
+        run: npm run test:integration
+
+  # ---------------------------------------------------------------------------
+  # LAYER 3: End-to-end (E2E) tests - the top of the pyramid.
+  # "needs: integration-tests" means this only runs after layers 1 and 2 pass.
+  # Drives a real browser through the full user journey: load the page,
+  # fill the form, submit, and check what actually shows up on screen.
+  # Slowest and most expensive layer - that's why it's last and has the fewest tests.
+  # ---------------------------------------------------------------------------
+  e2e-tests:
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 03-testing-pyramid
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      # Playwright needs an actual browser binary on the runner - this
+      # downloads just Chromium (not all browsers) to keep the demo fast.
+      - name: Install Playwright Browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run End-to-End Tests
+        run: npm run test:e2e

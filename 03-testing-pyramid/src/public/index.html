@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Testing Pyramid Login Demo</title>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="login-form">
+    <input id="username" name="username" placeholder="Username" autocomplete="off" />
+    <input id="password" name="password" type="password" placeholder="Password" />
+    <button type="submit">Log In</button>
+  </form>
+  <p id="result"></p>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+      document.getElementById('result').textContent = data.message;
+    });
+  </script>
+</body>
+</html>

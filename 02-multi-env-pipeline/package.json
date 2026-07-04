@@ -1,0 +1,17 @@
+{
+  "name": "02-multi-env-pipeline",
+  "version": "1.0.0",
+  "description": "Minimal Express app used to demonstrate a multi-environment pipeline (dev, staging, production)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",
+    "build": "echo \"Build step placeholder - a real project would compile/bundle here\""
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

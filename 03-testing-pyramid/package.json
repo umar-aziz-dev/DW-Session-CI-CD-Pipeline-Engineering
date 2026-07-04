@@ -1,0 +1,20 @@
+{
+  "name": "03-testing-pyramid",
+  "version": "1.0.0",
+  "description": "Tiny Express app demonstrating the testing pyramid (unit, integration, e2e) as sequential CI jobs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "@playwright/test": "^1.47.0"
+  }
+}

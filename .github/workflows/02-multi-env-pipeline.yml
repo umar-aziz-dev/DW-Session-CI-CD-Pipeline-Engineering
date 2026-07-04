@@ -1,0 +1,122 @@
+# =============================================================================
+# DEMO 2: A multi-environment pipeline with a matrix build and three
+# GitHub Environments (dev -> staging -> production).
+# Show this during the "GitHub Actions" section, after demo 1.
+# =============================================================================
+
+name: 02 - Multi-Environment Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '02-multi-env-pipeline/**'
+      - '.github/workflows/02-multi-env-pipeline.yml'
+  pull_request:
+    paths:
+      - '02-multi-env-pipeline/**'
+      - '.github/workflows/02-multi-env-pipeline.yml'
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # JOB 1: build
+  # Installs deps, runs tests, and "builds" the app on TWO Node.js versions
+  # at once (a "matrix" build) - this is how you prove your app works across
+  # multiple runtime versions before you ever think about deploying it.
+  # ---------------------------------------------------------------------------
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02-multi-env-pipeline
+    strategy:
+      # "matrix" tells GitHub Actions to run this job once per value below.
+      # Here that means the job runs twice: once on Node 18, once on Node 20.
+      matrix:
+        node-version: [18, 20]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Build App
+        run: npm run build
+
+  # ---------------------------------------------------------------------------
+  # JOB 2: deploy-dev
+  # "needs: build" means this job only starts after ALL matrix builds above
+  # have succeeded. "environment: dev" links this job to a GitHub Environment
+  # named "dev", which is where you'd store dev-only secrets/config.
+  # ---------------------------------------------------------------------------
+  deploy-dev:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: dev
+    defaults:
+      run:
+        working-directory: 02-multi-env-pipeline
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # We read a secret called API_URL from the "dev" GitHub Environment.
+      # We never print the real value - only "***" - so this is safe to show
+      # on screen. GitHub also auto-redacts secret values in logs regardless.
+      - name: "Deploy to dev"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: echo "Deploying version ${{ github.run_number }} to dev using API_URL=***"
+
+  # ---------------------------------------------------------------------------
+  # JOB 3: deploy-staging
+  # Only runs after deploy-dev succeeds. Same idea, different environment.
+  # ---------------------------------------------------------------------------
+  deploy-staging:
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment: staging
+    defaults:
+      run:
+        working-directory: 02-multi-env-pipeline
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: "Deploy to staging"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: echo "Deploying version ${{ github.run_number }} to staging using API_URL=***"
+
+  # ---------------------------------------------------------------------------
+  # JOB 4: deploy-production
+  # "environment: production" is the important line here. In the GitHub UI
+  # (Settings -> Environments -> production) you can add a "required
+  # reviewers" protection rule, which pauses the job until a human approves
+  # it. The workflow file doesn't need to know about that rule - GitHub
+  # enforces it automatically just because the job targets this environment.
+  # ---------------------------------------------------------------------------
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: 02-multi-env-pipeline
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: "Deploy to production"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: echo "Deploying version ${{ github.run_number }} to production using API_URL=***"
