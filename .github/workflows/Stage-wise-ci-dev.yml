@@ -1,4 +1,4 @@
-name: Basic-CICD Development CI Pipeline
+name: Stage-wise Development CI Pipeline
 
 on:
   pull_request:
@@ -14,18 +14,17 @@ jobs:
       # Step 1 – Checkout repository code
       - name: Checkout Code
         uses: actions/checkout@v4
-
       # Step 2 – Lint HTML with HTMLHint, CSS with Stylelint, and verify build with Parcel
       - name: Install Linting Tools
         run: npm install --save-dev htmlhint stylelint stylelint-config-standard
 
       - name: Lint HTML with HTMLHint
-        run: npx htmlhint "Basic-CICD/*.html"
+        run: npx htmlhint "Stage-wise/*.html"
 
       - name: Lint CSS with Stylelint
         run: |
           echo '{"rules":{"color-no-invalid-hex":true,"block-no-empty":true}}' > .stylelintrc.json
-          npx stylelint "Basic-CICD/style.css"
+          npx stylelint "Stage-wise/style.css"
 
       - name: Simulate Parcel Build
         run: echo "Development build verification complete – all HTML and CSS files passed linting."
@@ -41,8 +40,8 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: ./Basic-CICD
-          file: ./Basic-CICD/Dockerfile
+          context: ./Stage-wise
+          file: ./Stage-wise/Dockerfile
           push: false
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/pakvista-cicd:dev-latest
@@ -52,8 +51,8 @@ jobs:
       - name: Push Tagged Image to Docker Hub
         uses: docker/build-push-action@v5
         with:
-          context: ./Basic-CICD
-          file: ./Basic-CICD/Dockerfile
+          context: ./Stage-wise
+          file: ./Stage-wise/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/pakvista-cicd:dev-latest

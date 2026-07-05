@@ -9,7 +9,7 @@ workflow in [`.github/workflows/`](.github/workflows/).
 
 | # | Folder | Show it during... | What it demonstrates |
 |---|--------|--------------------|------------------------|
-| 1 | [`01-basic-cicd/`](01-basic-cicd/) | Right after explaining triggers/jobs/steps/runners | The simplest possible CI pipeline: one job, checkout → install → test → build |
+| 1 | [`01-Stage-wise/`](01-Stage-wise/) | Right after explaining triggers/jobs/steps/runners | The simplest possible CI pipeline: one job, checkout → install → test → build |
 | 2 | [`02-multi-env-pipeline/`](02-multi-env-pipeline/) | GitHub Actions section | Matrix builds, `needs:` job chaining, and 3 GitHub Environments (dev → staging → production, with a manual approval gate on production) |
 | 3 | [`03-testing-pyramid/`](03-testing-pyramid/) | Testing Stages section | The testing pyramid as 3 gated CI jobs: unit (Jest) → integration (Supertest) → e2e (Playwright) |
 
@@ -18,7 +18,7 @@ Each folder has its own README with exact local run commands and a
 
 ## Earlier experiment
 
-[`Basic-CICD/`](Basic-CICD/) is an earlier static-site CI/CD experiment
+[`Stage-wise/`](Stage-wise/) is an earlier static-site CI/CD experiment
 (HTML/CSS + Docker + Render deploy hooks, workflows named
-`Basic-CICD-*.yml`). It's kept as-is and is unrelated to the three
+`Stage-wise-*.yml`). It's kept as-is and is unrelated to the three
 Node/Express demos above.

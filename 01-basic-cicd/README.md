@@ -15,12 +15,12 @@ steps, runners**.
   `echo`, there's nothing to compile in this demo).
 
 The matching workflow lives at
-[`.github/workflows/01-basic-cicd.yml`](../.github/workflows/01-basic-cicd.yml).
+[`.github/workflows/01-Stage-wise.yml`](../.github/workflows/01-Stage-wise.yml).
 
 ## Run it locally
 
 ```bash
-cd 01-basic-cicd
+cd 01-Stage-wise
 npm install
 npm test        # runs the Jest unit test
 npm run build    # no-op, just echoes a message
@@ -34,7 +34,7 @@ see the greeting.
 
 1. Open `index.js` and `index.test.js` side by side - point out the app is
    two lines of real logic, on purpose.
-2. Open `.github/workflows/01-basic-cicd.yml` and read the comments aloud:
+2. Open `.github/workflows/01-Stage-wise.yml` and read the comments aloud:
    - `on:` → when the pipeline runs (push to `main`, or any pull request).
    - `jobs:` → one job, `build-and-test`.
    - `runs-on:` → the disposable Ubuntu VM ("runner") that does the work.

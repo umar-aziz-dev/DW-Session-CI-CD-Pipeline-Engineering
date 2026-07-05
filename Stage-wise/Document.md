@@ -1,4 +1,4 @@
-# CI/CD Demo with Basic-CICD
+# CI/CD Demo with Stage-wise
 
 This project is a good example for a beginner-friendly session because it is simple, visual, and easy to explain.
 
@@ -7,7 +7,7 @@ It contains:
 - a Dockerfile for containerizing the app
 - GitHub Actions workflows for CI and CD located in the repository root under .github/workflows/
 
-> Note: the app content lives inside the Basic-CICD folder, while the CI/CD workflow files now live in the outer Ci-CD repository folder.
+> Note: the app content lives inside the Stage-wise folder, while the CI/CD workflow files now live in the outer Ci-CD repository folder.
 
 
 ## 1. CI vs CD vs Continuous Delivery vs Continuous Deployment
@@ -52,7 +52,7 @@ Example:
 ## 2. What the current project demonstrates
 
 ### CI workflow
-The workflow in .github/workflows/Basic-CICD-ci-dev.yml (at the repository root) shows a basic CI example:
+The workflow in .github/workflows/Stage-wise-ci-dev.yml (at the repository root) shows a basic CI example:
 1. Trigger on pull request to development
 2. Checkout the repository
 3. Install linting tools
@@ -61,7 +61,7 @@ The workflow in .github/workflows/Basic-CICD-ci-dev.yml (at the repository root)
 6. Push the image to Docker Hub
 
 ### CD workflow
-The workflow in .github/workflows/Basic-CICD-cd-dev.yml (at the repository root) shows a basic deployment example:
+The workflow in .github/workflows/Stage-wise-cd-dev.yml (at the repository root) shows a basic deployment example:
 1. Trigger on push to development
 2. Checkout the repository
 3. Trigger a deployment hook

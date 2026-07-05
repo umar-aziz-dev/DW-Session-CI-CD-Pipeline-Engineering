@@ -10,12 +10,12 @@ on:
   push:
     branches: [main]
     paths:
-      - '01-basic-cicd/**'
-      - '.github/workflows/01-basic-cicd.yml'
+      - '01-Stage-wise/**'
+      - '.github/workflows/01-Stage-wise.yml'
   pull_request:
     paths:
-      - '01-basic-cicd/**'
-      - '.github/workflows/01-basic-cicd.yml'
+      - '01-Stage-wise/**'
+      - '.github/workflows/01-Stage-wise.yml'
 
 # "jobs" is a set of tasks that run for this workflow. This demo has only ONE job,
 # on purpose, to keep the first pipeline as easy to follow as possible.
@@ -29,7 +29,7 @@ jobs:
     # lives in a subfolder of the repo rather than at the repo root.
     defaults:
       run:
-        working-directory: 01-basic-cicd
+        working-directory: 01-Stage-wise
 
     # "steps" are the individual commands that run in order, top to bottom.
     # If any step fails, the job stops and is marked as failed.

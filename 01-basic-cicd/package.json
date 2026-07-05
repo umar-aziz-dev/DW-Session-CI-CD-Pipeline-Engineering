@@ -1,5 +1,5 @@
 {
-  "name": "01-basic-cicd",
+  "name": "01-Stage-wise",
   "version": "1.0.0",
   "description": "Minimal Express app used to demonstrate the simplest possible CI pipeline",
   "main": "index.js",
